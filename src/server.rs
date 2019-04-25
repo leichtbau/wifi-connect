@@ -144,7 +144,7 @@ pub fn start_server(
     let mut router = Router::new();
     
     if !disable_ui {
-    router.get("/", Static::new(ui_directory), "index");
+        router.get("/", Static::new(ui_directory), "index");
     }
     
     router.get("/networks", networks, "networks");
@@ -155,9 +155,9 @@ pub fn start_server(
     assets.mount("/", router);
     
     if !disable_ui {
-    assets.mount("/css", Static::new(&ui_directory.join("css")));
-    assets.mount("/img", Static::new(&ui_directory.join("img")));
-    assets.mount("/js", Static::new(&ui_directory.join("js")));
+        assets.mount("/css", Static::new(&ui_directory.join("css")));
+        assets.mount("/img", Static::new(&ui_directory.join("img")));
+        assets.mount("/js", Static::new(&ui_directory.join("js")));
     }
 
     let cors_middleware = CorsMiddleware::with_allow_any();
@@ -224,6 +224,21 @@ fn connect(req: &mut Request) -> IronResult<Response> {
 
     if let Err(e) = request_state.network_tx.send(command) {
         exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandConnect)
+    } else {
+        Ok(Response::with(status::Ok))
+    }
+}
+
+fn dismiss(req: &mut Request) -> IronResult<Response> {
+
+    debug!("Incoming `dismiss`");
+
+    let request_state = get_request_state!(req);
+
+    let command = NetworkCommand::Dismiss;
+
+    if let Err(e) = request_state.network_tx.send(command) {
+        exit_with_error(&request_state, e, ErrorKind::SendNetworkCommandDismiss)
     } else {
         Ok(Response::with(status::Ok))
     }

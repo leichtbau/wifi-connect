@@ -24,6 +24,7 @@ pub enum NetworkCommand {
         identity: String,
         passphrase: String,
     },
+    Dismiss,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -177,6 +178,12 @@ impl NetworkCommandHandler {
                     if self.connect(&ssid, &identity, &passphrase)? {
                         return Ok(());
                     }
+                },
+                NetworkCommand::Dismiss => {
+                    if let Some(ref connection) = self.portal_connection {
+                        stop_portal(connection, &self.config)?;
+                    }
+                    return Ok(());
                 },
             }
         }

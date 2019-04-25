@@ -39,6 +39,10 @@ error_chain! {
             description("Sending NetworkCommand::Connect failed")
         }
 
+        SendNetworkCommandDismiss {
+            description("Sending NetworkCommand::Dismiss failed")
+        }
+
         DeviceByInterface(interface: String) {
             description("Cannot find network device with interface name")
             display("Cannot find network device with interface name '{}'", interface)
