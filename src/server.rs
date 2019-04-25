@@ -130,6 +130,7 @@ pub fn start_server(
     network_tx: Sender<NetworkCommand>,
     exit_tx: Sender<ExitResult>,
     ui_directory: &PathBuf,
+    disable_ui: bool,
 ) {
     let exit_tx_clone = exit_tx.clone();
     let gateway_clone = gateway;
@@ -141,15 +142,23 @@ pub fn start_server(
     };
 
     let mut router = Router::new();
+    
+    if !disable_ui {
     router.get("/", Static::new(ui_directory), "index");
+    }
+    
     router.get("/networks", networks, "networks");
     router.post("/connect", connect, "connect");
+    router.post("/exit", dismiss, "exit");
 
     let mut assets = Mount::new();
     assets.mount("/", router);
+    
+    if !disable_ui {
     assets.mount("/css", Static::new(&ui_directory.join("css")));
     assets.mount("/img", Static::new(&ui_directory.join("img")));
     assets.mount("/js", Static::new(&ui_directory.join("js")));
+    }
 
     let cors_middleware = CorsMiddleware::with_allow_any();
 

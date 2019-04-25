@@ -23,6 +23,7 @@ pub struct Config {
     pub listening_port: u16,
     pub activity_timeout: u64,
     pub ui_directory: PathBuf,
+    pub disable_ui: bool
 }
 
 pub fn get_config() -> Config {
@@ -109,6 +110,15 @@ pub fn get_config() -> Config {
                 ))
                 .takes_value(true),
         )
+        .arg(
+            Arg::with_name("disable-ui")
+                 .short("h")
+                 .long("disable-ui")
+                 .value_name("disable_ui")
+                 .help(&format!(
+                     "Disable the Web UI"
+                 )),
+        )
         .get_matches();
 
     let interface: Option<String> = matches.value_of("portal-interface").map_or_else(
@@ -155,6 +165,8 @@ pub fn get_config() -> Config {
 
     let ui_directory = get_ui_directory(matches.value_of("ui-directory"));
 
+    let disable_ui = matches.is_present("disable-ui");
+
     Config {
         interface: interface,
         ssid: ssid,
@@ -164,6 +176,7 @@ pub fn get_config() -> Config {
         listening_port: listening_port,
         activity_timeout: activity_timeout,
         ui_directory: ui_directory,
+        disable_ui: disable_ui,
     }
 }
 

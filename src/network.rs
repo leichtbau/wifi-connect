@@ -97,6 +97,7 @@ impl NetworkCommandHandler {
         let listening_port = config.listening_port;
         let exit_tx_server = exit_tx.clone();
         let ui_directory = config.ui_directory.clone();
+        let disable_ui = config.disable_ui;
 
         thread::spawn(move || {
             start_server(
@@ -106,6 +107,7 @@ impl NetworkCommandHandler {
                 network_tx,
                 exit_tx_server,
                 &ui_directory,
+                disable_ui,
             );
         });
     }
