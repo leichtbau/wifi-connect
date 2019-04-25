@@ -180,6 +180,7 @@ impl NetworkCommandHandler {
                     }
                 },
                 NetworkCommand::Dismiss => {
+                    info!("Dismissed. Exiting...");
                     if let Some(ref connection) = self.portal_connection {
                         stop_portal(connection, &self.config)?;
                     }

@@ -149,7 +149,7 @@ pub fn start_server(
     
     router.get("/networks", networks, "networks");
     router.post("/connect", connect, "connect");
-    router.post("/exit", dismiss, "exit");
+    router.post("/dismiss", dismiss, "dismiss");
 
     let mut assets = Mount::new();
     assets.mount("/", router);
