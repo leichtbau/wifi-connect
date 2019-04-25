@@ -114,7 +114,6 @@ pub fn get_config() -> Config {
             Arg::with_name("disable-ui")
                  .short("h")
                  .long("disable-ui")
-                 .value_name("disable_ui")
                  .help(&format!(
                      "Disable the Web UI"
                  )),
