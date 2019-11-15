@@ -1,6 +1,4 @@
-language: node_js
-node_js:
-- 12
+language: generic
 
 services:
 - docker
@@ -14,11 +12,8 @@ matrix:
     arch: arm64
     env: ARCH=arm32v7
 
-# Nothing to do
-install:
-
 script:
-- npx dockerfile-template -d ARCH=$ARCH Dockerfile.template | docker build -f - -t docker.pkg.github.com/leichtbau/wifi-connect/wifi-connect-$ARCH:latest .
+- docker build --build-arg ARCH=$ARCH -t docker.pkg.github.com/leichtbau/wifi-connect/wifi-connect-$ARCH:latest .
 
 deploy:
   - provider: script
