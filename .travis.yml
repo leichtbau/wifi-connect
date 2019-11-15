@@ -1,4 +1,30 @@
-language: generic
-script: printf 'empty'
-notifications:
-  email: false
+language: node_js
+node_js:
+- 12
+
+services:
+- docker
+
+matrix:
+  include:
+  - os: linux
+    arch: amd64
+    env: ARCH=amd64
+  - os: linux
+    arch: arm64
+    env: ARCH=arm32v7
+
+# Nothing to do
+install:
+
+script:
+- npx dockerfile-template -d ARCH=$ARCH Dockerfile.template | docker build -f - -t docker.pkg.github.com/leichtbau/wifi-connect/wifi-connect-$ARCH:latest .
+
+deploy:
+  - provider: script
+    on:
+      tags: true
+    script: bash scripts/docker_push_ci
+env:
+  global:
+  - secure: vdF49jN7EdfhQgPhnVwpE3w4mO1KZKTHPcyv7V9cTtQXxp1DoxjiZb5Hr53W0hmBfH3T+kfzhIx+mQ9HW83QZuU8MMcrGzyZ2VHYGrYBmyFXglOMAZnReCelDwXT8v8WyQoSaT1akSNLsDt3wbIzTb2TLAFFqoxeZ1Nqj0ZLVMaBieX7T5m6CFBCJSaycp/quVb4RiMC1cYomU1DsYgZxE25BjaGHffJ7W2z7a838ItwhXGmidBoICNQb8k0KcvdLCVr65qpqYiHjt9cJdvWMy//W5W5d966e9uCSCDwDEM+GdECfSV/pINE3YvCrVnzx3Ypve7r3+cPXKoOJigR0hOGTdSUCmo8WWe0NcXrQLGMczjbElW31wrcAv/eYZsvZGlb6TVMSfmesLzvTUHYwN/svKIwBR9AHtNXzt6JfhcgWC1pwMWO164s2SrbSfUG+YiGjOJn3JToyOjlcBv3DSSpyaj1nHWPtqUO7x/Wju6ofoU7ReCwZd1oDhmf8WD8h4fbZRmkm8uRVduD1bTbXQdzTfQ+3dQjLHRFN6FGFqXCFYBzg5bpjOs6y2gTlRMhgPL5VoKZ90AoaXUmzN73mLAeX/gaXUDeX64lFm7HsJ/2xH0snduAzsumC7JRFJXrd2M+j242fLw+g90Vpo7Wx5PGCLR8CdVIpIJS1z0uqNk=
